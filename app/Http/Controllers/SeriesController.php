@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\SeriesFormRequest;
 use App\Models\Season;
 use App\Models\Series;
-use Psy\Command\EditCommand;
 use App\Models\Episode;
+use Illuminate\Http\Request;
+use Psy\Command\EditCommand;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Repositories\SeriesRepository;
+use App\Http\Requests\SeriesFormRequest;
 
 class SeriesController extends Controller
 {
+    public function __construct(protected SeriesRepository $seriesRepository)
+    {
+        $this->seriesRepository = $seriesRepository;
+    }
+
     public function index(Request $request)
     {
         //->orderBy('name', 'desc')->get()
@@ -30,34 +36,17 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
-        $serie = Series::create($request->all());
 
-        $seasons = [];
+        $serieData = [
+            'name' => $request->name,
+            'seasonsQty' => $request->seasonsQty,
+            'episodesPerSeason' => $request->episodesPerSeason,
+        ];
 
-        for ($i = 1; $i <= $request->seasonsQty; $i++) {
-            $seasons[] = [
-                'series_id' => $serie->id,
-                'number' => $i,
-            ];
-        }
-
-        Season::insert($seasons);
-
-        $episodes = [];
-        foreach ($serie->season as $temp) {
-            for ($j = 1; $j <= $request->episodesPerSeason; $j++) {
-                $episodes[] = [
-                    'seasons_id' => $temp->id,
-                    'number' => $j,
-                ];
-            }
-        }
-
-        Episode::insert($episodes);
-
+        $serie = $this->seriesRepository->add($serieData);
 
         return to_route('series.index')
-            ->with('mensagem.sucesso', "Série '{$request->name}' adicionada com sucesso");
+            ->with('mensagem.sucesso', "Série '{$serie->name}' adicionada com sucesso");
     }
 
     public function destroy(Series $series)

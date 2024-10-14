@@ -12,13 +12,13 @@
 
             <div class="col-2">
                 <label for="seasons" class="form-label">N° Temporadas:</label>
-                <input type="text" id="seasons" name="seasonsQty" class="form-control"
+                <input type="number" id="seasons" name="seasonsQty" class="form-control"
                     value="{{ old('seasons') }}">
             </div>
 
             <div class="col-2">
                 <label for="episodesPerSeason" class="form-label">Episódios / Temporada:</label>
-                <input type="text" id="episodesPerSeason" name="episodesPerSeason" class="form-control"
+                <input type="number" id="episodesPerSeason" name="episodesPerSeason" class="form-control"
                     value="{{ old('episodesPerSeason') }}">
             </div>
         </div>
