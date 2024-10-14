@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Season;
 use App\Models\Series;
-use App\Models\Episode;
 use Illuminate\Http\Request;
-use Psy\Command\EditCommand;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Repositories\SeriesRepository;
 use App\Http\Requests\SeriesFormRequest;
+use App\Repositories\SeriesRepository;
 
 class SeriesController extends Controller
 {
-    public function __construct(protected SeriesRepository $seriesRepository)
+    public function __construct(protected SeriesRepository $repository)
     {
-        $this->seriesRepository = $seriesRepository;
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
@@ -43,7 +39,7 @@ class SeriesController extends Controller
             'episodesPerSeason' => $request->episodesPerSeason,
         ];
 
-        $serie = $this->seriesRepository->add($serieData);
+        $serie = $this->repository->add($serieData);
 
         return to_route('series.index')
             ->with('mensagem.sucesso', "Série '{$serie->name}' adicionada com sucesso");
