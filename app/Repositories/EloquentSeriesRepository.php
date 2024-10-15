@@ -14,7 +14,10 @@ class EloquentSeriesRepository implements SeriesRepository
     {
         DB::beginTransaction();
 
-        $serie = Series::create(['name' => $serieData['name']]);
+        $serie = Series::create([
+            'name' => $serieData['name'],
+            'cover' => $serieData['cover']
+        ]);
 
         $seasons = [];
 

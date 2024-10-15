@@ -35,13 +35,17 @@ class SeriesController
 
     public function store(SeriesFormRequest $request)
     {
+        $path = $request->file('cover')->store('series_cover', 'public');
+
+
         $serieData = [
             'name' => $request->name,
             'seasonsQty' => $request->seasonsQty,
             'episodesPerSeason' => $request->episodesPerSeason,
+            'cover' => $path,
         ];
-        $serie = $this->repository->add($serieData);
 
+        $serie = $this->repository->add($serieData);
         \App\Events\SeriesCreated::dispatch(
             $serieData['name'],
             $serie->id,
