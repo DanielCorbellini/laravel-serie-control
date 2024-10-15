@@ -1,31 +1,35 @@
 <?php
 
-use App\Http\Middleware\Autenticador;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\UsersController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\EpisodesController;
+use App\Http\Controllers\ProfileController;
 
 
-Route::middleware(Autenticador::class)->group(function () {
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 
     Route::get('/', function () {
         return redirect('/series');
     });
 
-    Route::resource('/series', SeriesController::class)->except('show');
     Route::get('/series/{series}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
 
     Route::get('/seasons/{season}/episodes', [EpisodesController::class, 'index'])->name('episodes.index');
     Route::post('/seasons/{season}/episodes', [EpisodesController::class, 'update'])->name('episodes.update');
 });
+Route::resource('/series', SeriesController::class)->except('show');
 
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-
-Route::post('/login', [LoginController::class, 'store'])->name('signin');
-Route::get('/logout', [LoginController::class, 'destroy'])->name('logout');
-
-Route::get('/register', [UsersController::class, 'create'])->name('users.create');
-Route::post('/register', [UsersController::class, 'store'])->name('users.store');
+require __DIR__ . '/auth.php';

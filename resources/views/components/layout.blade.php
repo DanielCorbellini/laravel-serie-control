@@ -11,36 +11,43 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{route('series.index')}}">Home</a>
+            <a class="navbar-brand" href="{{ route('series.index') }}">Home</a>
 
             @auth
-                <a href="{{ route('logout') }}">Sair</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-dropdown-link :href="route('logout')"
+                        onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        {{ __('Sair') }}
+                    </x-dropdown-link>
+                </form>
             @endauth
 
             @guest
-            <a href="{{ route('login') }}">Entrar</a>
-
+                <a href="{{ route('login') }}">Entrar</a>
             @endguest
         </div>
     </nav>
-    <div class="container">
 
+    <div class="container">
         <h1>{{ $title }}</h1>
 
         @isset($mensagemSucesso)
-        <div class="alert alert-success">
-            {{ $mensagemSucesso }}
-        </div>
+            <div class="alert alert-success">
+                {{ $mensagemSucesso }}
+            </div>
         @endisset
 
         @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
 
         {{ $slot }}
