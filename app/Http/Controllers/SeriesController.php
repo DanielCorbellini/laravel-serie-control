@@ -59,6 +59,11 @@ class SeriesController
 
     public function destroy(Series $series)
     {
+        \App\Events\SeriesDeleted::dispatch(
+            $series->id,
+            $series->cover
+        );
+
         $series->delete();
         return to_route('series.index')
             ->with("mensagem.sucesso", "Série '$series->name' removida com sucesso");
