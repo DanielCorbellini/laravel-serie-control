@@ -5,7 +5,7 @@ use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\ProfileController;
-
+use App\Mail\SeriesCreated;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,4 +32,12 @@ Route::middleware('auth')->group(function () {
 });
 Route::resource('/series', SeriesController::class)->except('show');
 
+Route::get('/email', function () {
+    return new SeriesCreated(
+        'Série de teste',
+        1,
+        5,
+        10
+    );
+});
 require __DIR__ . '/auth.php';
