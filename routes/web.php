@@ -1,11 +1,11 @@
 <?php
 
+use App\Mail\SeriesCreated;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeriesController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeasonsController;
 use App\Http\Controllers\EpisodesController;
-use App\Http\Controllers\ProfileController;
-use App\Mail\SeriesCreated;
 
 Route::get('/', function () {
     return view('welcome');
