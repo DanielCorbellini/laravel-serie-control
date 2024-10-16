@@ -6,6 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SeriesFormRequest extends FormRequest
 {
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'cover' => $this->cover ?? null,  // Define o valor padrão de cover como null
+        ]);
+    }
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -23,6 +29,7 @@ class SeriesFormRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:3'],
+            'cover' => 'nullable|string',
         ];
     }
     public function messages(): array
