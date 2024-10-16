@@ -35,7 +35,9 @@ class SeriesController
 
     public function store(SeriesFormRequest $request)
     {
-        $path = $request->file('cover')->store('series_cover', 'public');
+        $path = $request->hasFile('cover')
+            ? $request->file('cover')->store('series_cover', 'public')
+            : "series_cover/Captura de tela de 2024-10-10 11-00-24.png";
 
 
         $serieData = [
